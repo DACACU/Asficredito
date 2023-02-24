@@ -1,0 +1,162 @@
+<app-navbar></app-navbar>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.3/moment.min.js"></script>
+
+<nav class="navbar navbar-expand-lg bg-body-tertiary">
+  <div class="container-fluid">
+    <p style="margin: 0px; padding-right: 0.5rem; padding-left: 0.5rem;" class="navbar-brand"><b> Time tracking </b></p>
+
+    <div class="d-flex" style="gap: 10px;">
+      <button class="btn btn-outline-primary" type="submit" disabled>Create Report</button>
+      <button class="btn btn-outline-primary" type="submit" disabled>Add Weekly Timesheet</button>
+    </div>
+  </div>
+</nav>
+
+<div class="container-xxl">
+
+  <div class="content-wrapper">
+    <div class="container-xxl flex-grow-1 container-p-y">
+      <div class="card" style="margin-top: 30px;" [formGroup]="formNewTask">
+        <div class="card-header">
+          <div>
+            <b>Add New Timesplit</b> on <input type="date" formControlName="date" class="form-control"
+              style="display: inline-flex; width: auto;">
+          </div>
+        </div>
+
+        <div class="card-body container-xxl text-center">
+          <div class="row">
+            <div class="col">
+              <div class="mb-3" style="align-items: center;display: flex;">
+                <div class="input-group">
+                  <span class="input-group-text">Task</span>
+                  <input type="text" aria-label="Task" class="form-control" formControlName="task"
+                    [matAutocomplete]="autoTask" required>
+                  <mat-autocomplete autoActiveFirstOption #autoTask="matAutocomplete">
+                    <mat-option *ngFor="let option of filteredTaskOptions | async" [value]="option">
+                      {{option}}
+                    </mat-option>
+                  </mat-autocomplete>
+                </div>
+
+                <div class="input-group">
+                  <span class="input-group-text">Description</span>
+                  <input type="text" aria-label="Description" class="form-control" formControlName="description"
+                    [matAutocomplete]="autoDesc">
+                  <mat-autocomplete autoActiveFirstOption #autoDesc="matAutocomplete">
+                    <mat-option *ngFor="let option of filteredDescriptionOptions | async" [value]="option">
+                      {{option}}
+                    </mat-option>
+                  </mat-autocomplete>
+                </div>
+
+                <input type="time" class="form-control" formControlName="time" style="max-width: 150px;">
+              </div>
+
+              <div class="input-group">
+                <span class="input-group-text">Comment (optional)</span>
+                <textarea class="form-control" formControlName="comment" aria-label="With textarea"></textarea>
+              </div>
+            </div>
+
+            <div style="width: 150px; display: grid; align-content: space-around;">
+              <button type="button" class="btn btn-success" [disabled]="!formNewTask.valid" (click)="addTask()">Start
+                Timer</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top: 30px;">
+        <div class="card-header">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <select class="form-select" aria-label="Default select example" disabled
+              style="display: inline-flex; width: auto;">
+              <option selected>All Timeslips</option>
+            </select>
+
+            <mat-button-toggle-group name="timeSequence" aria-label="Font Style" value="week" disabled>
+              <mat-button-toggle value="recent">Recent</mat-button-toggle>
+              <mat-button-toggle value="week">Week</mat-button-toggle>
+              <mat-button-toggle value="day">Day</mat-button-toggle>
+            </mat-button-toggle-group>
+          </div>
+        </div>
+
+        <div class="card-body">
+          <div *ngFor="let table of dataSource; let rowIndex = index">
+            <table mat-table [dataSource]="dataSource[rowIndex][0]">
+              <ng-container matColumnDef="date">
+                <th mat-header-cell *matHeaderCellDef> {{dataSource[rowIndex][1] | date:'EEEE d MMM y'}} </th>
+                <td mat-cell *matCellDef="let element"> {{element.owner}}</td>
+              </ng-container>
+
+              <ng-container matColumnDef="task">
+                <th mat-header-cell *matHeaderCellDef></th>
+                <td mat-cell *matCellDef="let element"> {{element.task}} </td>
+              </ng-container>
+
+              <ng-container matColumnDef="description">
+                <th mat-header-cell *matHeaderCellDef></th>
+                <td mat-cell *matCellDef="let element"> {{element.description}} </td>
+              </ng-container>
+
+              <ng-container matColumnDef="time">
+                <th mat-header-cell *matHeaderCellDef></th>
+                <td mat-cell *matCellDef="let element"> {{element.time}} </td>
+              </ng-container>
+
+              <ng-container matColumnDef="actions">
+                <th mat-header-cell *matHeaderCellDef>
+                  <button type="button" class="btn btn-outline-success" (click)="openTaskDialog(null)">+Add
+                    Timesplit</button>&nbsp;&nbsp;--:-- hrs
+                </th>
+                <td mat-cell *matCellDef="let element">
+                  <button type="button" class="btn btn-outline-primary" (click)="openTaskDialog(element)">Edit</button> &nbsp;&nbsp;
+                  <button type="button" class="btn btn-outline-danger" (click)="deleteTask(element)">X</button>
+                </td>
+              </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+            </table>
+          </div>
+
+
+
+        </div>
+      </div>
+
+
+      <!-- <h2 class="fw-bold py-3 mb-4 text-center">Clients</h2>
+      <div class="card">
+        <h5 class="card-header">Table of Clients</h5>
+        <div class="table-responsive text-nowrap">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>User Name</th>
+                <th>Email</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody class="table-border-bottom-0">
+              <tr *ngFor="let cliente of clientes">
+                <td>{{cliente.userName}}</td>
+                <td>{{cliente.email}}</td>
+                <td>
+                  <a title="editar" target="_blank">
+                    <i class="material-icons">arrow_forward</i>
+                  </a>
+                  <a title="eliminar" target="_blank">
+                    <i class="material-icons">delete</i>
+                  </a>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div> -->
+    </div>
+  </div>
+</div>

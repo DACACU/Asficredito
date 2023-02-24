@@ -1,0 +1,57 @@
+<div class="content-wrapper">
+  <div class="container-fluid flex-grow-1 container-p-y">
+    <div class="card" [formGroup]="formNewTask">
+
+      <div class="card-body container-fluid text-center">
+        <div class="row">
+          <div class="col">
+            <div class="mb-3" style="align-items: center;display: flex;">
+              <div class="input-group">
+                <span class="input-group-text">Task</span>
+                <input type="text" aria-label="Task" class="form-control" formControlName="task"
+                  [matAutocomplete]="autoTask" required>
+                <mat-autocomplete autoActiveFirstOption #autoTask="matAutocomplete">
+                  <mat-option *ngFor="let option of filteredTaskOptions | async" [value]="option">
+                    {{option}}
+                  </mat-option>
+                </mat-autocomplete>
+              </div>
+
+              <div class="input-group">
+                <span class="input-group-text">Description</span>
+                <input type="text" aria-label="Description" class="form-control" formControlName="description"
+                  [matAutocomplete]="autoDesc">
+                <mat-autocomplete autoActiveFirstOption #autoDesc="matAutocomplete">
+                  <mat-option *ngFor="let option of filteredDescriptionOptions | async" [value]="option">
+                    {{option}}
+                  </mat-option>
+                </mat-autocomplete>
+              </div>
+
+              <input type="time" class="form-control" formControlName="time" style="max-width: 150px;" [value]="newTime">
+            </div>
+
+
+            <div style="display: flex; align-items: center;">
+              <div>
+                <input type="date" formControlName="date" class="form-control" [value]="newDate"
+                  style="display: inline-flex; width: auto;">
+              </div>
+
+              <div class="input-group">
+                <span class="input-group-text">Comment (optional)</span>
+                <textarea class="form-control" formControlName="comment" aria-label="With textarea"></textarea>
+              </div>
+            </div>
+          </div>
+
+          <div style="width: 150px; display: grid; align-content: space-around;">
+            <button type="button" class="btn btn-success" [disabled]="!formNewTask.valid" (click)="addTask()">Start
+              Timer</button>
+            <button type="button" class="btn btn-outline-primary" (click)="onNoClick()">Cancel</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

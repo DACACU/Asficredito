@@ -1,0 +1,55 @@
+td.mat-cell:last-of-type {
+    text-align: right;
+    max-width: 220px;
+    width: 220px;
+}
+
+
+th.mat-header-cell:last-of-type {
+    text-align: right;
+    max-width: 220px;
+    width: 220px;
+}
+
+
+.mat-header-cell{
+    font-size: 1rem;
+    font-weight: bold;
+}
+
+
+/* td:last-child {
+    text-align: right;
+    max-width: 150px;
+}
+thead tr th:last-child {
+    text-align: right;
+    max-width: 150px;
+} */
+
+
+.btn-outline-success {
+    border: none;
+    padding: 0px;
+}
+
+td.mat-cell,
+td.mat-footer-cell,
+th.mat-header-cell {
+    padding: 0.75rem;
+    border-top: 1px solid #dee2e6;
+    vertical-align: bottom;
+    border-bottom: 2px solid #dee2e6;
+}
+
+mat-table>:not(caption)>*>* {
+    padding: 0.5rem 0.5rem;
+    background-color: var(--bs-table-bg);
+    border-bottom-width: var(--bs-border-width);
+    box-shadow: inset 0 0 0 9999px var(--bs-table-accent-bg);
+}
+
+table.mat-table {
+    width: 100%;
+    margin-top: 30px;
+}
